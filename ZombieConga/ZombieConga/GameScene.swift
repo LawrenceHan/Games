@@ -9,6 +9,8 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    let zombie1 = SKSpriteNode(imageNamed: "zombie1")
+    
     override func didMoveToView(view: SKView) {
         backgroundColor = SKColor.blackColor()
         
@@ -21,5 +23,11 @@ class GameScene: SKScene {
         
         let mySize = background.size
         print("Size: \(mySize)")
+        
+        // Add zombie1
+        zombie1.position = CGPoint(x: 400, y: 400)
+        let zombieSize = zombie1.size
+        zombie1.size = CGSize(width: zombieSize.width*2, height: zombieSize.height*2)
+        addChild(zombie1)
     }
 }
