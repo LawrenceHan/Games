@@ -15,6 +15,7 @@ class GameScene: SKScene {
     let zombieMovePointsPerSec: CGFloat = 480.0
     var velocity = CGPoint.zero
     let playableRect: CGRect
+    var lastTouchLocation = CGPoint.zero
     
     override init(size: CGSize) {
         let maxAspectRatio:CGFloat = 16.0/9.0 // 1
@@ -52,7 +53,17 @@ class GameScene: SKScene {
     }
     
     override func update(currentTime: NSTimeInterval) {
-        moveSprite(zombie, velocity: velocity)
+        let distance = (lastTouchLocation - zombie.position).length()
+        
+        if distance <= zombieMovePointsPerSec * CGFloat(dt) {
+            zombie.position = lastTouchLocation
+            velocity = CGPoint.zero
+        } else {
+            moveSprite(zombie, velocity: velocity)
+            rotateSprite(zombie, direction: velocity)
+        }
+        
+        boundsCheckZombie()
         
         if lastUpdateTime > 0 {
             dt = currentTime - lastUpdateTime
@@ -60,8 +71,6 @@ class GameScene: SKScene {
             dt = 0
         }
         lastUpdateTime = currentTime
-        boundsCheckZombie()
-        rotateSprite(zombie, direction: velocity)
     }
     
     func moveSprite(sprite: SKSpriteNode, velocity: CGPoint) {
@@ -72,16 +81,16 @@ class GameScene: SKScene {
         sprite.position += amountToMove
     }
     
-    func moveZombieToward(location: CGPoint) {
-        let offset = location - zombie.position
-        let direction = offset.normalized()
-        velocity = direction * zombieMovePointsPerSec
-    }
-    
     // MARK: - Touches methods
     
     func sceneTouched(touchLocation:CGPoint) {
         moveZombieToward(touchLocation)
+    }
+    
+    func moveZombieToward(location: CGPoint) {
+        let offset = location - zombie.position
+        let direction = offset.normalized()
+        velocity = direction * zombieMovePointsPerSec
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -90,6 +99,7 @@ class GameScene: SKScene {
         }
         let touchLocation = touch.locationInNode(self)
         sceneTouched(touchLocation)
+        lastTouchLocation = touchLocation
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -98,6 +108,7 @@ class GameScene: SKScene {
         }
         let touchLocation = touch.locationInNode(self)
         sceneTouched(touchLocation)
+        lastTouchLocation = touchLocation
     }
     
     func boundsCheckZombie() {
