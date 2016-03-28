@@ -66,17 +66,16 @@ class GameScene: SKScene {
     
     func moveSprite(sprite: SKSpriteNode, velocity: CGPoint) {
         // 1
-        let amountToMove = CGPoint(x: velocity.x * CGFloat(dt), y: velocity.y * CGFloat(dt))
+        let amountToMove = velocity * CGFloat(dt)
         
         // 2
-        sprite.position = CGPoint(x: sprite.position.x + amountToMove.x, y: sprite.position.y + amountToMove.y)
+        sprite.position += amountToMove
     }
     
     func moveZombieToward(location: CGPoint) {
-        let offset = CGPoint(x: location.x - zombie.position.x, y: location.y - zombie.position.y)
-        let length = sqrt(Double(offset.x * offset.x + offset.y * offset.y))
-        let direction = CGPoint(x: offset.x / CGFloat(length), y: offset.y / CGFloat(length))
-        velocity = CGPoint(x: direction.x * zombieMovePointsPerSec, y: direction.y * zombieMovePointsPerSec)
+        let offset = location - zombie.position
+        let direction = offset.normalized()
+        velocity = direction * zombieMovePointsPerSec
     }
     
     // MARK: - Touches methods
@@ -85,8 +84,7 @@ class GameScene: SKScene {
         moveZombieToward(touchLocation)
     }
     
-    override func touchesBegan(touches: Set<UITouch>,
-                               withEvent event: UIEvent?) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         guard let touch = touches.first else {
             return
         }
@@ -94,8 +92,7 @@ class GameScene: SKScene {
         sceneTouched(touchLocation)
     }
     
-    override func touchesMoved(touches: Set<UITouch>,
-                               withEvent event: UIEvent?) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         guard let touch = touches.first else {
             return
         }
@@ -126,7 +123,7 @@ class GameScene: SKScene {
     }
     
     func rotateSprite(sprite: SKSpriteNode, direction: CGPoint) {
-        sprite.zRotation = CGFloat(atan2(Double(direction.y), Double(direction.x)))
+        sprite.zRotation = direction.angle
     }
     
     // MARK: - DEBUG
