@@ -51,6 +51,10 @@ class GameScene: SKScene {
         //zombie1.setScale(2)
         addChild(zombie)
         
+        // Add enemy
+        spawnEnemy()
+        
+        // Debug
         debugDrawPlayableArea()
     }
     
@@ -147,6 +151,30 @@ class GameScene: SKScene {
             velocity.y = -velocity.y
         }
     }
+    
+    // MARK: - Game logic
+    
+    func spawnEnemy() {
+        let enemy = SKSpriteNode(imageNamed: "enemy")
+        enemy.position = CGPoint(x: size.width + enemy.size.width/2, y: size.height/2)
+        addChild(enemy)
+        
+        let actionMidMove = SKAction.moveByX(-size.width/2 - enemy.size.width/2,
+                                             y: -CGRectGetHeight(playableRect)/2 + enemy.size.height/2,
+                                             duration: 1.0)
+        let actionMove = SKAction.moveByX(-size.width/2 - enemy.size.width/2,
+                                          y: CGRectGetHeight(playableRect)/2 - enemy.size.height/2,
+                                          duration: 1.0)
+        let logMessage = SKAction.runBlock {
+            print("Reached bottom")
+        }
+        let wait = SKAction.waitForDuration(0.25)
+        let halfSequence = SKAction.sequence([actionMidMove, logMessage, wait, actionMove])
+        let sequence = SKAction.sequence([halfSequence, halfSequence.reversedAction()])
+        let repeatAction = SKAction.repeatActionForever(sequence)
+        enemy.runAction(repeatAction)
+    }
+    
     
     // MARK: - DEBUG
     
