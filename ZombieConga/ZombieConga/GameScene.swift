@@ -17,16 +17,26 @@ class GameScene: SKScene {
     let playableRect: CGRect
     var lastTouchLocation = CGPoint.zero
     let zombieRotateRadiansPerSec: CGFloat = 4.0 * π
+    let zombieAniamtion: SKAction
     
     
     override init(size: CGSize) {
-        let maxAspectRatio:CGFloat = 16.0/9.0 // 1
-        let playableHeight = size.width / maxAspectRatio // 2
-        let playableMargin = (size.height-playableHeight)/2.0 // 3
+        let maxAspectRatio:CGFloat = 16.0/9.0
+        let playableHeight = size.width / maxAspectRatio
+        let playableMargin = (size.height-playableHeight)/2.0
         playableRect = CGRect(x: 0, y: playableMargin,
                               width: size.width,
-                              height: playableHeight) // 4
-        super.init(size: size) // 5
+                              height: playableHeight)
+        
+        var textures:[SKTexture] = []
+        for i in 1...4 {
+            textures.append(SKTexture(imageNamed: "zombie\(i)"))
+        }
+        textures.append(textures[2])
+        textures.append(textures[1])
+        
+        zombieAniamtion = SKAction.animateWithTextures(textures, timePerFrame: 0.1)
+        super.init(size: size)
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -50,6 +60,7 @@ class GameScene: SKScene {
         zombie.position = CGPoint(x: 400, y: 400)
         //zombie1.setScale(2)
         addChild(zombie)
+        zombie.runAction(SKAction.repeatActionForever(zombieAniamtion))
         
         // Add enemy
         runAction(SKAction.repeatActionForever(
@@ -165,7 +176,8 @@ class GameScene: SKScene {
         addChild(enemy)
         
         let actionMove = SKAction.moveToX(-enemy.size.width/2, duration: 2.0)
-        enemy.runAction(actionMove)
+        let actionRemove = SKAction.removeFromParent()
+        enemy.runAction(SKAction.sequence([actionMove, actionRemove]))
     }
     
     
