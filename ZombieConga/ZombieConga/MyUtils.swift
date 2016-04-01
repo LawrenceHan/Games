@@ -101,7 +101,9 @@ extension CGFloat {
     func sign() -> CGFloat {
         return (self >= 0.0) ? 1.0 : -1.0
     }
-    
+}
+
+extension CGFloat {
     static func random() -> CGFloat {
         return CGFloat(Float(arc4random()) / Float(UInt32.max))
     }
@@ -111,4 +113,3 @@ extension CGFloat {
         return CGFloat.random() * (max - min) + min
     }
 }
-
