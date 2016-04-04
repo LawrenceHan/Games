@@ -9,6 +9,7 @@
 import Foundation
 import SpriteKit
 
+@available(iOS 9.0, *)
 class MainMenuScene: SKScene {
     
     override func didMoveToView(view: SKView) {

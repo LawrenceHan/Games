@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+@available(iOS 9.0, *)
 class GameScene: SKScene {
     let zombie = SKSpriteNode(imageNamed: "zombie1")
     var lives = 5
@@ -24,6 +25,7 @@ class GameScene: SKScene {
     let catCollisionSound: SKAction = SKAction.playSoundFileNamed("hitCat.wav", waitForCompletion: false)
     let enemyCollisionSound: SKAction = SKAction.playSoundFileNamed("hitCatLady.wav", waitForCompletion: false)
     var zombieInvincible = false
+    let cameraNode = SKCameraNode()
     
     override init(size: CGSize) {
         let maxAspectRatio:CGFloat = 16.0/9.0
@@ -78,6 +80,10 @@ class GameScene: SKScene {
         runAction(SKAction.repeatActionForever(
             SKAction.sequence([SKAction.runBlock(spawnCat), SKAction.waitForDuration(1.0)])))
         
+        addChild(cameraNode)
+        camera = cameraNode
+        cameraNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        
         // Debug
         // debugDrawPlayableArea()
     }
@@ -111,6 +117,8 @@ class GameScene: SKScene {
             print("You lose!")
             backgroundMusicPlayer.stop()
         }
+        
+        cameraNode.position = zombie.position
     }
     
     func moveSprite(sprite: SKSpriteNode, velocity: CGPoint) {
