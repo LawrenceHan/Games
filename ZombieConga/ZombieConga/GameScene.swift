@@ -202,14 +202,14 @@ class GameScene: SKScene {
     func spawnEnemy() {
         let enemy = SKSpriteNode(imageNamed: "enemy")
         enemy.name = "enemy"
-        enemy.position = CGPoint(x: size.width + enemy.size.width/2,
+        enemy.position = CGPoint(x: cameraRect.origin.x + cameraRect.width + enemy.size.width/2,
                                  y: CGFloat.random(
-                                    min: CGRectGetMinY(playableRect) + enemy.size.height/2,
-                                    max: CGRectGetMaxY(playableRect) - enemy.size.height/2))
+                                    min: CGRectGetMinY(cameraRect) + enemy.size.height/2,
+                                    max: CGRectGetMaxY(cameraRect) - enemy.size.height/2))
+        enemy.zPosition = 51
         
         addChild(enemy)
-        
-        let actionMove = SKAction.moveToX(-enemy.size.width/2, duration: 2.0)
+        let actionMove = SKAction.moveByX(-cameraRect.width, y: 0, duration: 2.0)
         let actionRemove = SKAction.removeFromParent()
         enemy.runAction(SKAction.sequence([actionMove, actionRemove]))
     }
@@ -371,7 +371,7 @@ class GameScene: SKScene {
     
     var cameraRect: CGRect {
         return CGRect(x: getCameraPosition().x - size.width / 2 + (size.width - playableRect.width) / 2,
-                      y: getCameraPosition().y - size.height / 2 + (size.width - playableRect.height) / 2,
+                      y: getCameraPosition().y - size.height / 2 + (size.height - playableRect.height) / 2,
                       width: playableRect.width, height: playableRect.height)
     }
     
@@ -391,7 +391,8 @@ class GameScene: SKScene {
     }
     
     func setCameraPosition(position: CGPoint) {
-        cameraNode.position = CGPoint(x: position.x, y: position.y - overlapAmount() / 2)
+        cameraNode.position = CGPoint(x: position.x,
+                                      y: position.y - overlapAmount() / 2)
     }
     
     func backgroundNode() -> SKSpriteNode {
