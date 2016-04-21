@@ -21,6 +21,7 @@
 		0286B6821CAE180800A20D19 /* hitCatLady.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0286B67D1CAE180800A20D19 /* hitCatLady.wav */; };
 		0286B6831CAE180800A20D19 /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0286B67E1CAE180800A20D19 /* lose.wav */; };
 		0286B6841CAE180800A20D19 /* win.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0286B67F1CAE180800A20D19 /* win.wav */; };
+		0287C7861CC87B6100014520 /* GLIMSTIC.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 0287C7851CC87B3500014520 /* GLIMSTIC.TTF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		0286B67D1CAE180800A20D19 /* hitCatLady.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = hitCatLady.wav; sourceTree = "<group>"; };
 		0286B67E1CAE180800A20D19 /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
 		0286B67F1CAE180800A20D19 /* win.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win.wav; sourceTree = "<group>"; };
+		0287C7851CC87B3500014520 /* GLIMSTIC.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; name = GLIMSTIC.TTF; path = Sounds/GLIMSTIC.TTF; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		023A24191C99A10A00A00053 /* ZombieConga */ = {
 			isa = PBXGroup;
 			children = (
+				0287C7851CC87B3500014520 /* GLIMSTIC.TTF */,
 				023A241A1C99A10A00A00053 /* AppDelegate.swift */,
 				023A241E1C99A10A00A00053 /* GameScene.swift */,
 				027DB7FE1CB1044E00514DB5 /* GameOverScene.swift */,
@@ -163,6 +166,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0287C7861CC87B6100014520 /* GLIMSTIC.TTF in Resources */,
 				023A24291C99A10A00A00053 /* LaunchScreen.storyboard in Resources */,
 				0286B6841CAE180800A20D19 /* win.wav in Resources */,
 				0286B6811CAE180800A20D19 /* hitCat.wav in Resources */,

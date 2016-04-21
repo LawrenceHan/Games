@@ -27,6 +27,8 @@ class GameScene: SKScene {
     let enemyCollisionSound: SKAction = SKAction.playSoundFileNamed("hitCatLady.wav", waitForCompletion: false)
     var zombieInvincible = false
     let cameraNode = SKCameraNode()
+    let livesLabel = SKLabelNode(fontNamed: "Glimstick")
+    let catCountsLabel = SKLabelNode(fontNamed: "Glimstick")
     
     
     override init(size: CGSize) {
@@ -64,6 +66,27 @@ class GameScene: SKScene {
             background.name = "background"
             addChild(background)
         }
+        
+        // Add lable
+        livesLabel.text = "Lives: X"
+        livesLabel.fontColor = SKColor.blackColor()
+        livesLabel.fontSize = 100
+        livesLabel.zPosition = 100
+        livesLabel.horizontalAlignmentMode = .Left
+        livesLabel.verticalAlignmentMode = .Bottom
+        livesLabel.position = CGPoint(x: -playableRect.size.width/2 + CGFloat(20),
+                                      y: -playableRect.size.height/2 + CGFloat(20) + overlapAmount()/2)
+        cameraNode.addChild(livesLabel)
+        
+        catCountsLabel.text = "Cats: X"
+        catCountsLabel.fontColor = SKColor.blackColor()
+        catCountsLabel.fontSize = 100
+        catCountsLabel.zPosition = 100
+        catCountsLabel.horizontalAlignmentMode = .Right
+        catCountsLabel.verticalAlignmentMode = .Bottom
+        catCountsLabel.position = CGPoint(x: playableRect.size.width/2 - CGFloat(20),
+                                          y: -playableRect.size.height/2 + CGFloat(20) + overlapAmount()/2)
+        cameraNode.addChild(catCountsLabel)
         
         // Add zombie1
         zombie.position = CGPoint(x: 400, y: 400)
@@ -287,6 +310,8 @@ class GameScene: SKScene {
             let reveal = SKTransition.flipHorizontalWithDuration(0.5)
             view?.presentScene(gameOverScene, transition: reveal)
         }
+        livesLabel.text = "Lives: \(lives)"
+        catCountsLabel.text = "Cats: \(trainCount)"
     }
     
     func zombieHitEnemy(enemy: SKSpriteNode) {
