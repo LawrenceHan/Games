@@ -10,3 +10,6 @@ public func delay(seconds seconds: Double, completion:()->()) {
     }
 }
 
+public func random(min min: CGFloat, max: CGFloat) -> CGFloat {
+    return CGFloat(Float(arc4random()) / Float(0xFFFFFFFF)) * (max - min) + min
+}
