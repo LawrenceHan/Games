@@ -4,30 +4,6 @@ import UIKit
 import SpriteKit
 import XCPlayground
 
-var blowingRight = true
-var windForce = CGVector(dx: 50, dy: 0)
-
-NSTimer.scheduledTimerWithTimeInterval(0.05, target: scene, selector: Selector("windWithTimer:"), userInfo: nil, repeats: true)
-NSTimer.scheduledTimerWithTimeInterval(3.0, target: scene, selector: Selector("switchWindDirection:"), userInfo: nil, repeats: true)
-
-extension SKScene {
-    func windWithTimer(timer: NSTimer) {
-        // TODO: apply force to all bodies
-        enumerateChildNodesWithName("sand") { (node, _) in
-            node.physicsBody!.applyForce(windForce)
-        }
-        
-        enumerateChildNodesWithName("shape") { (node, _) in
-            node.physicsBody!.applyForce(windForce)
-        }
-    }
-    
-    func switchWindDirection(timer: NSTimer) {
-        blowingRight = !blowingRight
-        windForce = CGVector(dx: blowingRight ? 50 : -50, dy: 0)
-    }
-}
-
 let sceneView = SKView(frame: CGRect(x: 0, y: 0, width: 480, height: 320))
 let scene = SKScene(size: CGSize(width: 480, height: 320))
 scene.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
@@ -109,4 +85,28 @@ delay(seconds: 2.0) {
             ]),
         count: 100))
     delay(seconds: 12, completion: shake)
+}
+
+var blowingRight = true
+var windForce = CGVector(dx: 50, dy: 0)
+
+NSTimer.scheduledTimerWithTimeInterval(0.05, target: scene, selector: Selector("windWithTimer:"), userInfo: nil, repeats: true)
+NSTimer.scheduledTimerWithTimeInterval(3.0, target: scene, selector: Selector("switchWindDirection:"), userInfo: nil, repeats: true)
+
+extension SKScene {
+    func windWithTimer(timer: NSTimer) {
+        // TODO: apply force to all bodies
+        enumerateChildNodesWithName("sand") { (node, _) in
+            node.physicsBody!.applyForce(windForce)
+        }
+        
+        enumerateChildNodesWithName("shape") { (node, _) in
+            node.physicsBody!.applyForce(windForce)
+        }
+    }
+    
+    func switchWindDirection(timer: NSTimer) {
+        blowingRight = !blowingRight
+        windForce = CGVector(dx: blowingRight ? 50 : -50, dy: 0)
+    }
 }
