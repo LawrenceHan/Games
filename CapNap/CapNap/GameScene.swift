@@ -8,38 +8,91 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
-    override func didMoveToView(view: SKView) {
-        /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!"
-        myLabel.fontSize = 45
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
-        
-        self.addChild(myLabel)
-    }
+protocol CustomNodeEvents {
+    func didMoveToScene()
+}
+
+protocol InteractiveNode {
+    func interact()
+}
+
+struct PhysicsCategory {
+    static let None: UInt32 = 0
+    static let Cat: UInt32 = 0b1 // 1
+    static let Block: UInt32 = 0b10 // 2
+    static let Bed: UInt32 = 0b100 // 4
+    static let Edge: UInt32 = 0b1000 // 8
+    static let Label: UInt32 = 0b10000 // 16
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-       /* Called when a touch begins */
+    var bedNode: BedNode!
+    var catNode: CatNode!
+    
+    override func didMoveToView(view: SKView) {
+        // Calculate playable margin
         
-        for touch in touches {
-            let location = touch.locationInNode(self)
-            
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)
+        let maxAspectRatio: CGFloat = 16.0/9.0 // iPhone 5
+        let maxAspectRatioHeight = size.width / maxAspectRatio
+        let playableMargin: CGFloat = (size.height - maxAspectRatioHeight) / 2
+        
+        let playableRect = CGRect(x: 0, y: playableMargin, width: size.width, height: size.height-playableMargin*2)
+        
+        physicsBody = SKPhysicsBody(edgeLoopFromRect: playableRect)
+        physicsWorld.contactDelegate = self
+        physicsBody!.categoryBitMask = PhysicsCategory.Edge
+        
+        bedNode = childNodeWithName("bed") as! BedNode
+        catNode = childNodeWithName("//cat_body") as! CatNode
+        
+        enumerateChildNodesWithName("//*") { (node, _) in
+            if let customNode = node as? CustomNodeEvents {
+                customNode.didMoveToScene()
+            }
         }
+        
+        SKTAudio.sharedInstance().playBackgroundMusic("backgroundMusic.mp3")
     }
    
+    func inGameMessage(text: String) {
+        let message = MessageNode(message: text)
+        message.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame))
+        addChild(message)
+    }
+    
+    func newGame() {
+        let scene = GameScene(fileNamed: "GameScene")
+        scene!.scaleMode = scaleMode
+        view!.presentScene(scene)
+    }
+    
+    func lose() {
+        // 1
+        SKTAudio.sharedInstance().pauseBackgroundMusic()
+        runAction(SKAction.playSoundFileNamed("lose.mp3", waitForCompletion: false))
+        
+        // 2
+        inGameMessage("Try again...")
+        
+        // 3
+        performSelector(#selector(newGame), withObject: nil, afterDelay: 5)
+        
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+    
+    // MARK: Contact test delegate
+    func didBeginContact(contact: SKPhysicsContact) {
+        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        
+        if collision == PhysicsCategory.Cat | PhysicsCategory.Bed {
+            print("SUCCESS")
+        } else if collision == PhysicsCategory.Cat | PhysicsCategory.Edge {
+            print("FAIL")
+        }
+        
     }
 }
