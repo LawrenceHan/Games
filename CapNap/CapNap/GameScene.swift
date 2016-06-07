@@ -29,6 +29,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var bedNode: BedNode!
     var catNode: CatNode!
+    var playable = true
     
     override func didMoveToView(view: SKView) {
         // Calculate playable margin
@@ -78,6 +79,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // 3
         performSelector(#selector(newGame), withObject: nil, afterDelay: 5)
         
+        playable = false
+        catNode.wakeUp()
     }
     
     override func update(currentTime: CFTimeInterval) {
@@ -86,12 +89,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: Contact test delegate
     func didBeginContact(contact: SKPhysicsContact) {
+        if !playable {
+            return
+        }
+        
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         
         if collision == PhysicsCategory.Cat | PhysicsCategory.Bed {
             print("SUCCESS")
         } else if collision == PhysicsCategory.Cat | PhysicsCategory.Edge {
             print("FAIL")
+            lose()
         }
         
     }

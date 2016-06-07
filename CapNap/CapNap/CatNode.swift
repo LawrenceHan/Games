@@ -17,4 +17,20 @@ class CatNode: SKSpriteNode, CustomNodeEvents {
         parent!.physicsBody!.collisionBitMask = PhysicsCategory.Block | PhysicsCategory.Edge
         parent!.physicsBody!.contactTestBitMask = PhysicsCategory.Bed | PhysicsCategory.Edge
     }
+    
+    func wakeUp() {
+        // 1
+        for child in children {
+            child.removeFromParent()
+        }
+        texture = nil
+        color = SKColor.clearColor()
+        
+        // 2
+        let catAwake = SKSpriteNode(fileNamed: "CatWakeUp")!.childNodeWithName("cat_awake")!
+        
+        // 3
+        catAwake.moveToParent(self)
+        catAwake.position = CGPoint(x: -30, y: 100)
+    }
 }
