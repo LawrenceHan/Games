@@ -83,6 +83,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         catNode.wakeUp()
     }
     
+    func win() {
+        playable = false
+        
+        SKTAudio.sharedInstance().pauseBackgroundMusic()
+        runAction(SKAction.playSoundFileNamed("win.mp3", waitForCompletion: false))
+        
+        inGameMessage("Nice job!")
+        
+        performSelector(#selector(newGame), withObject: nil, afterDelay: 3)
+        
+        catNode.curlAt(bedNode.position)
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
@@ -97,6 +110,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if collision == PhysicsCategory.Cat | PhysicsCategory.Bed {
             print("SUCCESS")
+            win()
         } else if collision == PhysicsCategory.Cat | PhysicsCategory.Edge {
             print("FAIL")
             lose()
