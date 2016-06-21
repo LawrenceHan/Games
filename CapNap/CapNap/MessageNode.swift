@@ -9,6 +9,8 @@
 import SpriteKit
 
 class MessageNode: SKLabelNode {
+    var bounces = 0
+    
     convenience init(message: String) {
         self.init(fontNamed: "AvenirNext-Regular")
         
@@ -26,7 +28,15 @@ class MessageNode: SKLabelNode {
         
         physicsBody = SKPhysicsBody(circleOfRadius: 10)
         physicsBody!.collisionBitMask = PhysicsCategory.Edge
+        physicsBody!.contactTestBitMask = PhysicsCategory.Edge
         physicsBody!.categoryBitMask = PhysicsCategory.Label
         physicsBody!.restitution = 0.7
+    }
+    
+    func didBounce() {
+        bounces += 1
+        if bounces >= 4 {
+            removeFromParent()
+        }
     }
 }

@@ -91,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         inGameMessage("Nice job!")
         
-        performSelector(#selector(newGame), withObject: nil, afterDelay: 3)
+        performSelector(#selector(newGame), withObject: nil, afterDelay: 5)
         
         catNode.curlAt(bedNode.position)
     }
@@ -102,6 +102,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: Contact test delegate
     func didBeginContact(contact: SKPhysicsContact) {
+        if let labelNode = ((contact.bodyA.categoryBitMask == PhysicsCategory.Label) ?
+            contact.bodyA.node : contact.bodyB.node) as? MessageNode {
+            labelNode.didBounce()
+        }
+        
         if !playable {
             return
         }
